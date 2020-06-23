@@ -1,11 +1,11 @@
-CLS
-$Servers = Get-ADComputer -Filter {OperatingSystem -like "*server*"} | where {$_.name -notlike '*-AG' -and $_.enabled -eq 'True'} | select -ExpandProperty name | sort-object
+Clear-Host
+$Servers = Get-ADComputer -Filter {OperatingSystem -like "*server*"} | Where-Object {$_.name -notlike '*-AG' -and $_.enabled -eq 'True'} | Select-Object -ExpandProperty name | sort-object
 $results = @()
 ​
 Foreach ($ComputerName in $Servers) {
     Write-Host "Querying $ComputerName" -ForegroundColor Yellow
     try {
-        $queryResults = (qwinsta.exe /server:$ComputerName 2> $null | foreach { (($_.trim() -replace "\s+",","))} | ConvertFrom-Csv -ErrorAction SilentlyContinue) 
+        $queryResults = (qwinsta.exe /server:$ComputerName 2> $null | ForEach-Object { (($_.trim() -replace "\s+",","))} | ConvertFrom-Csv -ErrorAction SilentlyContinue) 
     }
     Catch {
         Write-Host $_.Exception.Message
